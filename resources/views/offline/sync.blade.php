@@ -1,48 +1,83 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Synchronisation hors ligne') }}
+            {{ __('Synchronisation des données') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <div class="mb-6">
-                    <h3 class="text-lg font-medium text-gray-900">Statut de connexion</h3>
-                    <p class="mt-2">
-                        Vous êtes actuellement <span id="online-status" class="font-semibold"></span>
-                    </p>
-                </div>
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">État de la connexion</h3>
+                        <div id="connection-status" class="p-4 rounded-md bg-green-50 border border-green-200">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-green-800">
+                                        Vous êtes actuellement en ligne
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="mb-6">
-                    <h3 class="text-lg font-medium text-gray-900">Télécharger les données</h3>
-                    <p class="mt-2 text-gray-600">
-                        Téléchargez les données les plus récentes pour une utilisation hors ligne.
-                    </p>
-                    <button id="download-data" class="mt-4 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition">
-                        Télécharger les données
-                    </button>
-                </div>
+                    <div class="mb-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Dernière synchronisation</h3>
+                        <div id="last-sync" class="text-sm text-gray-600">
+                            Jamais synchronisé
+                        </div>
+                    </div>
 
-                <div class="mb-6">
-                    <h3 class="text-lg font-medium text-gray-900">Synchroniser les modifications</h3>
-                    <p class="mt-2 text-gray-600">
-                        Envoyez vos modifications locales au serveur.
-                    </p>
-                    <button id="sync-data" class="mt-4 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring focus:ring-indigo-300 disabled:opacity-25 transition">
-                        Synchroniser maintenant
-                    </button>
-                </div>
+                    <div class="mb-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Synchroniser les données</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            La synchronisation téléchargera les dernières données du serveur et enverra les modifications locales.
+                        </p>
+                        <div id="sync-status" class="mb-4 text-sm text-gray-600">
+                            Prêt à synchroniser
+                        </div>
+                        <button id="sync-button" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring focus:ring-indigo-300 disabled:opacity-25 transition">
+                            Synchroniser maintenant
+                        </button>
+                    </div>
 
-                <div class="mb-6">
-                    <h3 class="text-lg font-medium text-gray-900">Application hors ligne</h3>
-                    <p class="mt-2 text-gray-600">
-                        Accédez à la version hors ligne de l'application.
-                    </p>
-                    <a href="{{ route('offline.app') }}" class="mt-4 inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring focus:ring-green-300 disabled:opacity-25 transition">
-                        Ouvrir l'application hors ligne
-                    </a>
+                    <div class="mb-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Mode hors ligne</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Accédez à vos données même sans connexion Internet.
+                        </p>
+                        <a href="{{ route('offline.app') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition">
+                            Accéder au mode hors ligne
+                        </a>
+                    </div>
+
+                    <div class="mt-8">
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Statistiques de synchronisation</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div class="bg-white p-4 rounded-lg shadow border border-gray-200">
+                                <h4 class="text-sm font-medium text-gray-500">Lapins</h4>
+                                <p id="rabbits-count" class="mt-1 text-2xl font-semibold text-gray-900">-</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow border border-gray-200">
+                                <h4 class="text-sm font-medium text-gray-500">Cages</h4>
+                                <p id="cages-count" class="mt-1 text-2xl font-semibold text-gray-900">-</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow border border-gray-200">
+                                <h4 class="text-sm font-medium text-gray-500">Traitements</h4>
+                                <p id="treatments-count" class="mt-1 text-2xl font-semibold text-gray-900">-</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow border border-gray-200">
+                                <h4 class="text-sm font-medium text-gray-500">Reproductions</h4>
+                                <p id="breedings-count" class="mt-1 text-2xl font-semibold text-gray-900">-</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -50,240 +85,343 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Mettre à jour le statut de connexion
-            function updateOnlineStatus() {
-                const status = navigator.onLine ? 'en ligne' : 'hors ligne';
-                const statusElement = document.getElementById('online-status');
-                statusElement.textContent = status;
-                statusElement.className = navigator.onLine ? 'text-green-500' : 'text-red-500';
+            // Check if IndexedDB is available
+            if (!window.indexedDB) {
+                document.getElementById('sync-status').innerHTML = `
+                    <div class="p-4 bg-red-50 border-l-4 border-red-400 rounded-r-lg">
+                        <p class="text-sm text-red-700">
+                            Votre navigateur ne supporte pas IndexedDB, nécessaire pour le mode hors ligne.
+                        </p>
+                    </div>
+                `;
+                document.getElementById('sync-button').disabled = true;
+                return;
+            }
+
+            // Check connection status
+            updateConnectionStatus();
+            window.addEventListener('online', updateConnectionStatus);
+            window.addEventListener('offline', updateConnectionStatus);
+
+            // Load last sync time
+            const lastSyncTimestamp = localStorage.getItem('lastSyncTimestamp');
+            if (lastSyncTimestamp) {
+                const date = new Date(parseInt(lastSyncTimestamp) * 1000);
+                document.getElementById('last-sync').textContent = 'Dernière synchronisation: ' + date.toLocaleString();
+            }
+
+            // Load database statistics
+            loadDatabaseStats();
+
+            // Sync button event listener
+            document.getElementById('sync-button').addEventListener('click', synchronizeData);
+        });
+
+        function updateConnectionStatus() {
+            const statusElement = document.getElementById('connection-status');
+            
+            if (navigator.onLine) {
+                statusElement.className = 'p-4 rounded-md bg-green-50 border border-green-200';
+                statusElement.innerHTML = `
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-green-800">
+                                Vous êtes actuellement en ligne
+                            </p>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('sync-button').disabled = false;
+            } else {
+                statusElement.className = 'p-4 rounded-md bg-red-50 border border-red-200';
+                statusElement.innerHTML = `
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-red-800">
+                                Vous êtes actuellement hors ligne
+                            </p>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('sync-button').disabled = true;
+            }
+        }
+
+        function loadDatabaseStats() {
+            const dbPromise = indexedDB.open('gestionElevageOffline', 1);
+            
+            dbPromise.onupgradeneeded = function(event) {
+                const db = event.target.result;
                 
-                // Activer/désactiver les boutons selon l'état de la connexion
-                document.getElementById('sync-data').disabled = !navigator.onLine;
-                if (!navigator.onLine) {
-                    document.getElementById('sync-data').classList.add('opacity-50');
-                } else {
-                    document.getElementById('sync-data').classList.remove('opacity-50');
+                // Create object stores if they don't exist
+                if (!db.objectStoreNames.contains('rabbits')) {
+                    db.createObjectStore('rabbits', { keyPath: 'id' });
                 }
+                if (!db.objectStoreNames.contains('cages')) {
+                    db.createObjectStore('cages', { keyPath: 'id' });
+                }
+                if (!db.objectStoreNames.contains('treatments')) {
+                    db.createObjectStore('treatments', { keyPath: 'id' });
+                }
+                if (!db.objectStoreNames.contains('breedings')) {
+                    db.createObjectStore('breedings', { keyPath: 'id' });
+                }
+            };
+            
+            dbPromise.onsuccess = function(event) {
+                const db = event.target.result;
+                
+                // Count rabbits
+                const rabbitsTransaction = db.transaction(['rabbits'], 'readonly');
+                const rabbitsStore = rabbitsTransaction.objectStore('rabbits');
+                const rabbitsCountRequest = rabbitsStore.count();
+                
+                rabbitsCountRequest.onsuccess = function() {
+                    document.getElementById('rabbits-count').textContent = rabbitsCountRequest.result;
+                };
+                
+                // Count cages
+                const cagesTransaction = db.transaction(['cages'], 'readonly');
+                const cagesStore = cagesTransaction.objectStore('cages');
+                const cagesCountRequest = cagesStore.count();
+                
+                cagesCountRequest.onsuccess = function() {
+                    document.getElementById('cages-count').textContent = cagesCountRequest.result;
+                };
+                
+                // Count treatments
+                const treatmentsTransaction = db.transaction(['treatments'], 'readonly');
+                const treatmentsStore = treatmentsTransaction.objectStore('treatments');
+                const treatmentsCountRequest = treatmentsStore.count();
+                
+                treatmentsCountRequest.onsuccess = function() {
+                    document.getElementById('treatments-count').textContent = treatmentsCountRequest.result;
+                };
+                
+                // Count breedings
+                const breedingsTransaction = db.transaction(['breedings'], 'readonly');
+                const breedingsStore = breedingsTransaction.objectStore('breedings');
+                const breedingsCountRequest = breedingsStore.count();
+                
+                breedingsCountRequest.onsuccess = function() {
+                    document.getElementById('breedings-count').textContent = breedingsCountRequest.result;
+                };
+            };
+            
+            dbPromise.onerror = function(event) {
+                console.error("Error opening database:", event.target.error);
+            };
+        }
+
+        function synchronizeData() {
+            if (!navigator.onLine) {
+                document.getElementById('sync-status').textContent = 'Impossible de synchroniser: vous êtes hors ligne';
+                return;
             }
             
-            // Mettre à jour le statut initial
-            updateOnlineStatus();
+            document.getElementById('sync-status').textContent = 'Synchronisation en cours...';
+            document.getElementById('sync-button').disabled = true;
             
-            // Écouter les changements de statut de connexion
-            window.addEventListener('online', updateOnlineStatus);
-            window.addEventListener('offline', updateOnlineStatus);
-            
-            // Télécharger les données
-            document.getElementById('download-data').addEventListener('click', async function() {
-                try {
-                    // Afficher un indicateur de chargement
-                    this.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Téléchargement...';
-                    this.disabled = true;
+            // First, collect any local changes to upload
+            collectLocalChanges()
+                .then(localChanges => {
+                    // Upload local changes if there are any
+                    if (localChanges.hasChanges) {
+                        return fetch('{{ route("offline.upload") }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify(localChanges.data)
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        });
+                    }
+                    return { success: true };
+                })
+                .then(uploadResult => {
+                    if (!uploadResult.success) {
+                        throw new Error('Failed to upload local changes');
+                    }
                     
-                    // Ouvrir la base de données
-                    const dbPromise = indexedDB.open('gestionElevageOffline', 1);
+                    // Download latest data from server
+                    return fetch('{{ route("offline.download") }}')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        });
+                })
+                .then(serverData => {
+                    // Store the downloaded data in IndexedDB
+                    return storeServerData(serverData);
+                })
+                .then(() => {
+                    // Update UI
+                    document.getElementById('sync-status').textContent = 'Synchronisation réussie!';
+                    document.getElementById('sync-button').disabled = false;
                     
-                    dbPromise.onupgradeneeded = function(event) {
-                        const db = event.target.result;
-                        
-                        // Créer les object stores s'ils n'existent pas
-                        if (!db.objectStoreNames.contains('rabbits')) {
-                            db.createObjectStore('rabbits', { keyPath: 'id' });
-                        }
-                        if (!db.objectStoreNames.contains('cages')) {
-                            db.createObjectStore('cages', { keyPath: 'id' });
-                        }
-                        if (!db.objectStoreNames.contains('treatments')) {
-                            db.createObjectStore('treatments', { keyPath: 'id' });
-                        }
-                        if (!db.objectStoreNames.contains('breedings')) {
-                            db.createObjectStore('breedings', { keyPath: 'id' });
-                        }
-                        if (!db.objectStoreNames.contains('foodSchedules')) {
-                            db.createObjectStore('foodSchedules', { keyPath: 'id' });
-                        }
-                        if (!db.objectStoreNames.contains('reminders')) {
-                            db.createObjectStore('reminders', { keyPath: 'id' });
-                        }
-                        if (!db.objectStoreNames.contains('pendingChanges')) {
-                            db.createObjectStore('pendingChanges', { keyPath: 'id', autoIncrement: true });
-                        }
-                    };
+                    const now = new Date();
+                    document.getElementById('last-sync').textContent = 'Dernière synchronisation: ' + now.toLocaleString();
                     
-                    dbPromise.onsuccess = async function(event) {
-                        const db = event.target.result;
-                        
-                        // Télécharger les données du serveur
-                        const response = await fetch('{{ route("offline.download") }}');
-                        const data = await response.json();
-                        
-                        // Stocker les données dans IndexedDB
-                        const transaction = db.transaction([
-                            'rabbits', 'cages', 'treatments', 'breedings', 
-                            'foodSchedules', 'reminders'
-                        ], 'readwrite');
-                        
-                        // Stocker les lapins
-                        const rabbitsStore = transaction.objectStore('rabbits');
-                        rabbitsStore.clear();
-                        data.rabbits.forEach(rabbit => {
-                            rabbitsStore.add(rabbit);
-                        });
-                        
-                        // Stocker les cages
-                        const cagesStore = transaction.objectStore('cages');
-                        cagesStore.clear();
-                        data.cages.forEach(cage => {
-                            cagesStore.add(cage);
-                        });
-                        
-                        // Stocker les traitements
-                        const treatmentsStore = transaction.objectStore('treatments');
-                        treatmentsStore.clear();
-                        data.treatments.forEach(treatment => {
-                            treatmentsStore.add(treatment);
-                        });
-                        
-                        // Stocker les reproductions
-                        const breedingsStore = transaction.objectStore('breedings');
-                        breedingsStore.clear();
-                        data.breedings.forEach(breeding => {
-                            breedingsStore.add(breeding);
-                        });
-                        
-                        // Stocker les planifications alimentaires
-                        const foodSchedulesStore = transaction.objectStore('foodSchedules');
-                        foodSchedulesStore.clear();
-                        data.foodSchedules.forEach(schedule => {
-                            foodSchedulesStore.add(schedule);
-                        });
-                        
-                        // Stocker les rappels
-                        const remindersStore = transaction.objectStore('reminders');
-                        remindersStore.clear();
-                        data.reminders.forEach(reminder => {
-                            remindersStore.add(reminder);
-                        });
-                        
-                        transaction.oncomplete = function() {
-                            // Mettre à jour l'interface utilisateur
-                            document.getElementById('download-data').innerHTML = 'Télécharger les données';
-                            document.getElementById('download-data').disabled = false;
-                            
-                            // Afficher un message de succès
-                            alert('Données téléchargées avec succès pour une utilisation hors ligne.');
-                            
-                            // Stocker la date de dernière synchronisation
-                            localStorage.setItem('lastSyncTimestamp', data.timestamp);
-                        };
-                        
-                        transaction.onerror = function(event) {
-                            console.error('Erreur lors du stockage des données:', event.target.error);
-                            document.getElementById('download-data').innerHTML = 'Télécharger les données';
-                            document.getElementById('download-data').disabled = false;
-                            alert('Erreur lors du téléchargement des données. Veuillez réessayer.');
-                        };
-                    };
-                    
-                    dbPromise.onerror = function(event) {
-                        console.error('Erreur lors de l\'ouverture de la base de données:', event.target.error);
-                        document.getElementById('download-data').innerHTML = 'Télécharger les données';
-                        document.getElementById('download-data').disabled = false;
-                        alert('Erreur lors de l\'accès à la base de données locale. Veuillez réessayer.');
-                    };
-                } catch (error) {
-                    console.error('Erreur lors du téléchargement des données:', error);
-                    document.getElementById('download-data').innerHTML = 'Télécharger les données';
-                    document.getElementById('download-data').disabled = false;
-                    alert('Erreur lors du téléchargement des données. Veuillez réessayer.');
-                }
-            });
-            
-            // Synchroniser les données
-            document.getElementById('sync-data').addEventListener('click', async function() {
-                if (!navigator.onLine) {
-                    alert('Vous êtes actuellement hors ligne. Veuillez vous connecter à Internet pour synchroniser vos données.');
-                    return;
-                }
+                    // Reload database statistics
+                    loadDatabaseStats();
+                })
+                .catch(error => {
+                    console.error('Synchronization error:', error);
+                    document.getElementById('sync-status').textContent = 'Erreur de synchronisation: ' + error.message;
+                    document.getElementById('sync-button').disabled = false;
+                });
+        }
+
+        function collectLocalChanges() {
+            return new Promise((resolve, reject) => {
+                const dbPromise = indexedDB.open('gestionElevageOffline', 1);
                 
-                try {
-                    // Afficher un indicateur de chargement
-                    this.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Synchronisation...';
-                    this.disabled = true;
+                dbPromise.onsuccess = function(event) {
+                    const db = event.target.result;
+                    const changes = {
+                        hasChanges: false,
+                        data: {
+                            rabbits: [],
+                            cages: [],
+                            treatments: [],
+                            breedings: []
+                        }
+                    };
                     
-                    // Ouvrir la base de données
-                    const dbPromise = indexedDB.open('gestionElevageOffline', 1);
+                    // Collect modified rabbits
+                    const rabbitsTransaction = db.transaction(['rabbits'], 'readonly');
+                    const rabbitsStore = rabbitsTransaction.objectStore('rabbits');
+                    const rabbitsRequest = rabbitsStore.getAll();
                     
-                    dbPromise.onsuccess = async function(event) {
-                        const db = event.target.result;
+                    rabbitsRequest.onsuccess = function() {
+                        const rabbits = rabbitsRequest.result.filter(rabbit => rabbit.modified);
+                        if (rabbits.length > 0) {
+                            changes.hasChanges = true;
+                            changes.data.rabbits = rabbits;
+                        }
                         
-                        // Récupérer les changements en attente
-                        const transaction = db.transaction(['pendingChanges'], 'readonly');
-                        const store = transaction.objectStore('pendingChanges');
-                        const request = store.getAll();
+                        // Collect modified cages
+                        const cagesTransaction = db.transaction(['cages'], 'readonly');
+                        const cagesStore = cagesTransaction.objectStore('cages');
+                        const cagesRequest = cagesStore.getAll();
                         
-                        request.onsuccess = async function() {
-                            const pendingChanges = request.result;
-                            
-                            if (pendingChanges.length === 0) {
-                                document.getElementById('sync-data').innerHTML = 'Synchroniser maintenant';
-                                document.getElementById('sync-data').disabled = false;
-                                alert('Aucune modification à synchroniser.');
-                                return;
+                        cagesRequest.onsuccess = function() {
+                            const cages = cagesRequest.result.filter(cage => cage.modified);
+                            if (cages.length > 0) {
+                                changes.hasChanges = true;
+                                changes.data.cages = cages;
                             }
                             
-                            // Envoyer les changements au serveur
-                            const response = await fetch('{{ route("offline.upload") }}', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                                },
-                                body: JSON.stringify({ changes: pendingChanges })
-                            });
+                            // Collect modified treatments
+                            const treatmentsTransaction = db.transaction(['treatments'], 'readonly');
+                            const treatmentsStore = treatmentsTransaction.objectStore('treatments');
+                            const treatmentsRequest = treatmentsStore.getAll();
                             
-                            if (response.ok) {
-                                // Effacer les changements synchronisés
-                                const clearTransaction = db.transaction(['pendingChanges'], 'readwrite');
-                                const clearStore = clearTransaction.objectStore('pendingChanges');
-                                clearStore.clear();
+                            treatmentsRequest.onsuccess = function() {
+                                const treatments = treatmentsRequest.result.filter(treatment => treatment.modified);
+                                if (treatments.length > 0) {
+                                    changes.hasChanges = true;
+                                    changes.data.treatments = treatments;
+                                }
                                 
-                                clearTransaction.oncomplete = function() {
-                                    document.getElementById('sync-data').innerHTML = 'Synchroniser maintenant';
-                                    document.getElementById('sync-data').disabled = false;
-                                    alert('Données synchronisées avec succès.');
+                                // Collect modified breedings
+                                const breedingsTransaction = db.transaction(['breedings'], 'readonly');
+                                const breedingsStore = breedingsTransaction.objectStore('breedings');
+                                const breedingsRequest = breedingsStore.getAll();
+                                
+                                breedingsRequest.onsuccess = function() {
+                                    const breedings = breedingsRequest.result.filter(breeding => breeding.modified);
+                                    if (breedings.length > 0) {
+                                        changes.hasChanges = true;
+                                        changes.data.breedings = breedings;
+                                    }
                                     
-                                    // Mettre à jour les données locales
-                                    document.getElementById('download-data').click();
+                                    resolve(changes);
                                 };
-                            } else {
-                                document.getElementById('sync-data').innerHTML = 'Synchroniser maintenant';
-                                document.getElementById('sync-data').disabled = false;
-                                alert('Erreur lors de la synchronisation des données. Veuillez réessayer.');
-                            }
-                        };
-                        
-                        request.onerror = function(event) {
-                            console.error('Erreur lors de la récupération des changements en attente:', event.target.error);
-                            document.getElementById('sync-data').innerHTML = 'Synchroniser maintenant';
-                            document.getElementById('sync-data').disabled = false;
-                            alert('Erreur lors de la récupération des changements en attente. Veuillez réessayer.');
+                            };
                         };
                     };
                     
-                    dbPromise.onerror = function(event) {
-                        console.error('Erreur lors de l\'ouverture de la base de données:', event.target.error);
-                        document.getElementById('sync-data').innerHTML = 'Synchroniser maintenant';
-                        document.getElementById('sync-data').disabled = false;
-                        alert('Erreur lors de l\'accès à la base de données locale. Veuillez réessayer.');
+                    rabbitsRequest.onerror = function(event) {
+                        reject(event.target.error);
                     };
-                } catch (error) {
-                    console.error('Erreur lors de la synchronisation des données:', error);
-                    document.getElementById('sync-data').innerHTML = 'Synchroniser maintenant';
-                    document.getElementById('sync-data').disabled = false;
-                    alert('Erreur lors de la synchronisation des données. Veuillez réessayer.');
-                }
+                };
+                
+                dbPromise.onerror = function(event) {
+                    reject(event.target.error);
+                };
             });
-        });
+        }
+
+        function storeServerData(data) {
+            return new Promise((resolve, reject) => {
+                const dbPromise = indexedDB.open('gestionElevageOffline', 1);
+                
+                dbPromise.onsuccess = function(event) {
+                    const db = event.target.result;
+                    const transaction = db.transaction(['rabbits', 'cages', 'treatments', 'breedings'], 'readwrite');
+                    
+                    // Clear and repopulate rabbits
+                    const rabbitsStore = transaction.objectStore('rabbits');
+                    rabbitsStore.clear();
+                    data.rabbits.forEach(rabbit => {
+                        rabbitsStore.add(rabbit);
+                    });
+                    
+                    // Clear and repopulate cages
+                    const cagesStore = transaction.objectStore('cages');
+                    cagesStore.clear();
+                    data.cages.forEach(cage => {
+                        cagesStore.add(cage);
+                    });
+                    
+                    // Clear and repopulate treatments
+                    const treatmentsStore = transaction.objectStore('treatments');
+                    treatmentsStore.clear();
+                    data.treatments.forEach(treatment => {
+                        treatmentsStore.add(treatment);
+                    });
+                    
+                    // Clear and repopulate breedings
+                    const breedingsStore = transaction.objectStore('breedings');
+                    breedingsStore.clear();
+                    data.breedings.forEach(breeding => {
+                        breedingsStore.add(breeding);
+                    });
+                    
+                    transaction.oncomplete = function() {
+                        // Store the timestamp
+                        localStorage.setItem('lastSyncTimestamp', data.timestamp);
+                        resolve();
+                    };
+                    
+                    transaction.onerror = function(event) {
+                        reject(event.target.error);
+                    };
+                };
+                
+                dbPromise.onerror = function(event) {
+                    reject(event.target.error);
+                };
+            });
+        }
     </script>
 </x-app-layout>

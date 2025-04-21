@@ -55,6 +55,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/offline/upload', [OfflineController::class, 'uploadData'])->name('offline.upload');
     Route::get('/offline/download', [OfflineController::class, 'downloadData'])->name('offline.download');
     Route::get('/offline/app', [OfflineController::class, 'offlineApp'])->name('offline.app');
+    
+    // Nouvelles routes pour les pages hors ligne
+    Route::get('/offline/rabbits', [OfflineController::class, 'offlineRabbits'])->name('offline.rabbits');
+    Route::get('/offline/cages', [OfflineController::class, 'offlineCages'])->name('offline.cages');
+    Route::get('/offline/treatments', [OfflineController::class, 'offlineTreatments'])->name('offline.treatments');
+    Route::get('/offline/breedings', [OfflineController::class, 'offlineBreedings'])->name('offline.breedings');
 });
 
 // Routes accessibles aux gestionnaires de ferme (lecture et création seulement)
@@ -248,4 +254,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+Route::get('/offline', function () {
+    return view('offline');
+})->name('offline');
 Route::get('/treatments/upcoming', [TreatmentController::class, 'upcoming'])->name('treatments.upcoming');

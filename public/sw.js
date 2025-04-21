@@ -2,11 +2,14 @@
 const CACHE_NAME = 'gestion-elevage-v1';
 const urlsToCache = [
   '/',
-  '/offline/app',
+  '/offline',
   '/css/app.css',
   '/js/app.js',
-  '/js/offline.js',
-  '/images/logo.png',
+  '/offline/app',
+  '/offline/rabbits',
+  '/offline/cages',
+  '/offline/treatments',
+  '/offline/breedings',
   // Ajoutez d'autres ressources statiques ici
 ];
 
